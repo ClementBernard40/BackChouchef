@@ -173,7 +173,7 @@ const jwtMiddleware = require('../middlewares/jwtMiddleware');
 
 router
     .route('/register') //route to create a user
-        .post(jwtMiddleware.verifyToken,userController.userRegister)
+        .post(userController.userRegister)
 
 router 
     .route("/login") //route to log a user and get his token

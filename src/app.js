@@ -1,10 +1,11 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 const host = '0.0.0.0';
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://cbernard817:k5C323vRDRSSecDQ@portfolio.utfixsj.mongodb.net/?retryWrites=true&w=majority&appName=Portfolio");
+mongoose.connect("mongodb+srv://cbernard817:CUUmgirVB2DmOKCW@chouchef.2fmbp28.mongodb.net/?retryWrites=true&w=majority&appName=Chouchef");
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -13,7 +14,6 @@ app.use(function(req, res, next) {
 });
 // Ajoutez la route OPTIONS ici
 app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   res.sendStatus(200);
@@ -67,16 +67,12 @@ app.get('/api-docs', swaggerUi.setup(swaggerSpec));
 
 
 const userRoute = require('./routes/userRoute');
-const contactRoute = require('./routes/contactRoute');
-const projectRoute = require('./routes/projectRoute');
-const schoolPRoute = require('./routes/schoolPRoute');
-const profPRoute = require('./routes/profPRoute');
-const stack = require('./routes/stackRoute');
-const uploadRoutes = require('./routes/uploadRoutes');
+const foodRoute = require('./routes/foodRoute');
+const shopRoute = require('./routes/shopRoute');
 const imageRoute = require('./routes/imageRoute');
 
 app.use('/users', userRoute);
-app.use('/', schoolPRoute, profPRoute, contactRoute, projectRoute, stack, uploadRoutes, imageRoute);
+app.use('/', foodRoute, imageRoute, shopRoute);
 
 
 app.listen(port, host);

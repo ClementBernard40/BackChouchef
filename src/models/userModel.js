@@ -15,6 +15,10 @@ let userSchema = new Schema ({
         type: String,
         required: true
     },
+    user_shop:  [{ 
+        type: mongoose.Types.ObjectId, 
+        ref: 'Shop' 
+    }],
     created_at: {
         type: Date,
         default: Date.now
