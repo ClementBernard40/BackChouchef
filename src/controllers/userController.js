@@ -54,6 +54,7 @@ exports.userLogin = async (req, res) => {
             };
             
             // Signing the JWT token with the secret key and setting an expiration time
+            console.log(process.env.JWT_KEY)
             const token = await jwt.sign(userData, process.env.JWT_KEY, { expiresIn: '10h' });
             res.status(200).json({ token });
         } else {
@@ -126,7 +127,7 @@ exports.listAUsers = async (req,res) => {
 exports.listAllUsers = async (req,res) => {
     try {
         // Retrieving all users from the database
-        const users = await User.find({});
+        const users = await User.find({}).populate('user_shop');
         res.status(200);
         res.json(users);
     } catch (error) {

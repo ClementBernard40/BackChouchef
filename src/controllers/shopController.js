@@ -1,10 +1,33 @@
 const Shop = require('../models/shopModel');
-const Food = require('../models/foodModel')
+const Food = require('../models/foodModel');
+const User = require('../models/userModel');
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
+
+
 // Create a new shop list
 exports.createShop = async (req, res) => {
     try {
+        // Extraire le token JWT des en-têtes de la requête
+        const token = req.headers['authorization'];
+
+        // Décoder le token JWT pour obtenir les informations de l'utilisateur
+        let payload = jwtMiddleware.decode(token);
+        var user_id = payload.id;
+
+        // Récupérer l'utilisateur en utilisant l'ID de l'utilisateur
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        // Créer un nouveau shop avec les données du corps de la requête
         const newShop = new Shop(req.body);
         await newShop.save();
+
+        // Ajouter l'ID du nouveau shop à l'utilisateur et enregistrer les modifications
+        user.user_shop.push(newShop._id);
+        await user.save();
+
         res.status(201).json(newShop);
     } catch (error) {
         res.status(400).json({ message: error.message });
