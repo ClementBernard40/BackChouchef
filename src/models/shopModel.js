@@ -1,15 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-let shopSchema = new Schema ({
-    foods_in_shop:  [{ 
-        type: mongoose.Types.ObjectId, 
-        ref: 'Food' 
-    }],
-    created_at: {
-        type: Date,
-        default: Date.now
-    }
+const ShopSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  foods_in_shop: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Food",
+    },
+  ],
+  food_checked: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Food",
+    },
+  ],
+  nb_checked: {
+    type: Number,
+    default: 0,
+  },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('Shop', shopSchema);
+const Shop = mongoose.model("Shop", ShopSchema);
+
+module.exports = Shop;

@@ -1,10 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userController = require('../controllers/userController');
-const jwtMiddleware = require('../middlewares/jwtMiddleware');
-
-
-
+const userController = require("../controllers/userController");
+const jwtMiddleware = require("../middlewares/jwtMiddleware");
 
 /**
  * @openapi
@@ -170,31 +167,25 @@ const jwtMiddleware = require('../middlewares/jwtMiddleware');
  *         description: User not found
  */
 
+router
+  .route("/register") //route to create a user
+  .post(userController.userRegister);
 
 router
-    .route('/register') //route to create a user
-        .post(userController.userRegister)
+  .route("/login") //route to log a user and get his token
+  .post(userController.userLogin);
 
-router 
-    .route("/login") //route to log a user and get his token
-        .post(userController.userLogin)
+router
+  .route("/allUsers") //route to get the list of all users in the database
+  .get(userController.listAllUsers);
 
-    
-    router 
-    .route("/allUsers") //route to get the list of all users in the database
-        .get(userController.listAllUsers)
+router
+  .route("/:id_users")
+  .delete(userController.deleteAUser) //route to delete a user
+  .put(userController.updateAUser) //route to update a user
+  .get(userController.getUserById);
 
+router.get("/email/:email", userController.getUserByEmail); // route to get a user by email !!!!! need doc
 
-
-
-router 
-    .route("/:id_users")
-        .delete(jwtMiddleware.verifyToken,userController.deleteAUser)//route to delete a user
-        .put(jwtMiddleware.verifyToken,userController.updateAUser)//route to update a user
-        .get(userController.listAUsers)
-
-
-
-
-
+router.put("/:id_users/password", userController.updateUserPassword);
 module.exports = router;
