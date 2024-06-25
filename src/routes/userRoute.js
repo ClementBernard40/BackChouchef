@@ -181,11 +181,15 @@ router
 
 router
   .route("/:id_users")
-  .delete(userController.deleteAUser) //route to delete a user
-  .put(userController.updateAUser) //route to update a user
+  .delete(jwtMiddleware.verifyToken, userController.deleteAUser) //route to delete a user
+  .put(jwtMiddleware.verifyToken, userController.updateAUser) //route to update a user
   .get(userController.getUserById);
 
 router.get("/email/:email", userController.getUserByEmail); // route to get a user by email !!!!! need doc
 
-router.put("/:id_users/password", userController.updateUserPassword);
+router.put(
+  "/:id_users/password",
+  jwtMiddleware.verifyToken,
+  userController.updateUserPassword
+);
 module.exports = router;

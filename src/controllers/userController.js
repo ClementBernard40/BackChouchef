@@ -3,8 +3,7 @@ require("dotenv").config();
 const User = require("../models/userModel");
 const Shop = require("../models/shopModel");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs"); // Utilisation de bcryptjs à la place de bcrypt
-
+const bcrypt = require("bcryptjs");
 // Setting the number of salt rounds for password hashing
 const saltRounds = 10;
 
@@ -106,7 +105,7 @@ exports.updateAUser = async (req, res) => {
 
     // Hashing the new password if present in the update
     if (userUpdate.password) {
-      userUpdate.password = await bcrypt.hash(userUpdate.password, saltRounds); // Utilisation de bcryptjs pour le hashage du nouveau mot de passe
+      userUpdate.password = await bcrypt.hash(userUpdate.password, saltRounds);
     }
 
     // Updating the user in the database
@@ -148,8 +147,8 @@ exports.getUserById = async (req, res) => {
     // Extract user ID from request parameters
     const userId = req.params.id_users;
 
-    // Find user by ID
-    const user = await User.findById(userId).populate("user_shop"); // Populate user_shop if needed
+    // Find user by ID and populate user_shop
+    const user = await User.findById(userId).populate("user_shop");
 
     // Handle case where user is not found
     if (!user) {
@@ -168,7 +167,7 @@ exports.getUserById = async (req, res) => {
 exports.listAllUsers = async (req, res) => {
   try {
     // Retrieving all users from the database
-    const users = await User.find({}).populate("user_shop");
+    const users = await User.find({});
     res.status(200);
     res.json(users);
   } catch (error) {
@@ -199,15 +198,14 @@ exports.getUserByEmail = async (req, res) => {
 
 // Controller function to update a user's password
 exports.updateUserPassword = async (req, res) => {
+  const userId = req.params.id_users;
+  const { currentPassword, newPassword } = req.body;
   try {
-    const { currentPassword, newPassword } = req.body;
-    const userId = req.params.id_users;
-
     console.log(userId);
     console.log(currentPassword, newPassword);
 
     // Fetch user from database
-    const user = await User.findById(userId);
+    const user = await User.findById(req.params.id_users).populate("user_shop");
     if (!user) {
       console.log(`User not found: ${userId}`);
       return res.status(404).json({ message: "User not found" });

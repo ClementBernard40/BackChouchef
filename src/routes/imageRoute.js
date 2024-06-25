@@ -1,6 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const imageController = require('../controllers/imageController');
+const imageController = require("../controllers/imageController");
 
 /**
  * @openapi
@@ -34,12 +34,10 @@ const imageController = require('../controllers/imageController');
 
 module.exports = router;
 
-
-
 // Routes CRUD pour les projets
 
 router
-    .route('/image/:imageName')
-        .get(imageController.getImageByName)
+  .route("/image/:imageName")
+  .get(jwtMiddleware.verifyToken, imageController.getImageByName);
 
 module.exports = router;

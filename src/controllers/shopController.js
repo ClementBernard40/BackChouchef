@@ -5,6 +5,7 @@ const jwtMiddleware = require("../middlewares/jwtMiddleware");
 
 // Create a new shop list
 exports.createShop = async (req, res) => {
+  console.log(req.body);
   try {
     const user_id = req.params.userId;
     const user = await User.findById(user_id);
@@ -125,18 +126,13 @@ exports.checkItem = async (req, res) => {
     return res.status(400).json({ message: "food_checked must be an array" });
   }
 
-  console.log("Shop ID:", id);
-  console.log("Food checked IDs:", food_checked);
-
   try {
     // Find the shop by its ID
     const shop = await Shop.findById(id);
-    console.log("test liste");
     if (!shop) {
       return res.status(405).json({ message: "Shop not found" });
     }
-    console.log("test ok");
-    console.log("test validefood");
+
     // Validate that each item in food_checked exists in the foods collection
     const validFoodIds = [];
     for (const foodId of food_checked) {
@@ -148,9 +144,6 @@ exports.checkItem = async (req, res) => {
       }
       validFoodIds.push(food._id);
     }
-    console.log("test ok");
-
-    console.log("Valid food IDs:", validFoodIds);
 
     // Use findOneAndUpdate to update the shop document and disable versioning
     const updatedShop = await Shop.findOneAndUpdate(
@@ -164,10 +157,6 @@ exports.checkItem = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    console.log("Shop updated successfully:", updatedShop);
-    console.log(
-      "---------------------------------------------------------------------------------------------------------------"
-    );
     // Respond with the updated shop
     res.json(updatedShop);
   } catch (error) {
@@ -177,14 +166,12 @@ exports.checkItem = async (req, res) => {
 };
 exports.removefood = async (req, res) => {
   const { listId, foodId } = req.params;
-  console.log("list id :", listId, "food id :", foodId); // Log the IDs
   try {
     const updatedShop = await Shop.findByIdAndUpdate(
       listId,
       { $pull: { foods_in_shop: foodId } },
       { new: true }
     );
-    console.log("Updated shop after removal:", updatedShop); // Log the updated shop
 
     if (!updatedShop) {
       return res.status(404).json({ message: "Shop not found" });

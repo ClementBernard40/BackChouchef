@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = process.env.PORT || 5000;
+//const port = process.env.PORT || 5000;
+const port = 3001;
 const host = "0.0.0.0";
 
 const mongoose = require("mongoose");
@@ -17,7 +18,6 @@ app.use(function (req, res, next) {
   );
   next();
 });
-// Ajoutez la route OPTIONS ici
 app.options("*", (req, res) => {
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -76,10 +76,9 @@ app.get("/api-docs", swaggerUi.setup(swaggerSpec));
 const userRoute = require("./routes/userRoute");
 const foodRoute = require("./routes/foodRoute");
 const shopRoute = require("./routes/shopRoute");
-const imageRoute = require("./routes/imageRoute");
 const detectRoute = require("./routes/DetectRoute");
 
 app.use("/users", userRoute);
-app.use("/", foodRoute, imageRoute, shopRoute, detectRoute);
+app.use("/", foodRoute, shopRoute, detectRoute);
 
 app.listen(port, host);
