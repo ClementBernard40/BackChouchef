@@ -167,29 +167,88 @@ const jwtMiddleware = require("../middlewares/jwtMiddleware");
  *         description: User not found
  */
 
-router
-  .route("/register") //route to create a user
-  .post(userController.userRegister);
+/**
+ * @openapi
+ * /users/email/{email}:
+ *   get:
+ *     summary: Get user by email
+ *     description: Endpoint to retrieve a user by email.
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User email
+ *     responses:
+ *       '200':
+ *         description: User retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '401':
+ *         description: Unauthorized - Invalid token
+ *       '404':
+ *         description: User not found
+ */
 
-router
-  .route("/login") //route to log a user and get his token
-  .post(userController.userLogin);
+/**
+ * @openapi
+ * /users/{id_users}/password:
+ *   put:
+ *     summary: Update user password by ID
+ *     description: Endpoint to update a user's password by ID.
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id_users
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID
+ *     requestBody:
+ *       description: User current and new password
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Password updated successfully
+ *       '401':
+ *         description: Unauthorized - Invalid token
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Server error
+ */
 
-router
-  .route("/allUsers") //route to get the list of all users in the database
-  .get(userController.listAllUsers);
+router.route("/register").post(userController.userRegister);
+
+router.route("/login").post(userController.userLogin);
+
+router.route("/allUsers").get(userController.listAllUsers);
 
 router
   .route("/:id_users")
-  .delete(jwtMiddleware.verifyToken, userController.deleteAUser) //route to delete a user
-  .put(jwtMiddleware.verifyToken, userController.updateAUser) //route to update a user
+  .delete(jwtMiddleware.verifyToken, userController.deleteAUser)
+  .put(jwtMiddleware.verifyToken, userController.updateAUser)
   .get(userController.getUserById);
 
-router.get("/email/:email", userController.getUserByEmail); // route to get a user by email !!!!! need doc
+router.get("/email/:email", userController.getUserByEmail);
 
 router.put(
   "/:id_users/password",
   jwtMiddleware.verifyToken,
   userController.updateUserPassword
 );
+
 module.exports = router;

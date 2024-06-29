@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-//const port = process.env.PORT || 5000;
-const port = 3001;
+const port = process.env.PORT || 5000;
+//const port = 3001;
 const host = "0.0.0.0";
 
 const mongoose = require("mongoose");
@@ -10,7 +10,8 @@ mongoose.connect(
   "mongodb+srv://cbernard817:CUUmgirVB2DmOKCW@chouchef.2fmbp28.mongodb.net/?retryWrites=true&w=majority&appName=Chouchef"
 );
 app.use(function (req, res, next) {
-  //res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://chouchef.fr");
+  //res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
